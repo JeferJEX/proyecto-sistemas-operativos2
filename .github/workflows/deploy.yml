@@ -1,0 +1,37 @@
+name: Deploy Node API to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Deploy en EC2
+        uses: appleboy/ssh-action@master
+
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+
+          script: |
+            cd ~/proyecto-sistemas-operativos2/api
+
+            git pull origin main
+
+            docker stop mi-api || true
+            docker rm mi-api || true
+
+            docker build -t mi-api-node .
+
+            docker run -d \
+              --name mi-api \
+              -p 3000:3000 \
+              mi-api-node
