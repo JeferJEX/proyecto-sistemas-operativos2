@@ -1,58 +1,49 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevOps Cloud Project</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurante Delicias</title>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+  <header class="hero">
+    <h1>Restaurante Delicias</h1>
+    <p>Auténtica comida artesanal</p>
+  </header>
 
-<div class="container">
-    <h1>🚀 DevOps Cloud Infrastructure</h1>
+  <main>
+    <section class="menu-section">
+      <h2>Menú</h2>
+      <div id="menu" class="menu-grid"></div>
+    </section>
+  </main>
 
-    <p class="subtitle">
-        Proyecto desplegado en AWS con Docker Swarm y CI/CD
-    </p>
+  <footer>© 2026 Restaurante Delicias</footer>
 
-    <div class="cards">
-
-        <div class="card">
-            <h2>☁ AWS EC2</h2>
-            <p>Infraestructura cloud pública.</p>
-        </div>
-
-        <div class="card">
-            <h2>🐳 Docker</h2>
-            <p>Aplicación contenerizada.</p>
-        </div>
-
-        <div class="card">
-            <h2>⚙ Docker Swarm</h2>
-            <p>Orquestación de contenedores.</p>
-        </div>
-
-        <div class="card">
-            <h2>🔁 CI/CD</h2>
-            <p>Deploy automático con GitHub Actions.</p>
-        </div>
-
-        <div class="card">
-            <h2>🔒 HTTPS SSL</h2>
-            <p>Certificados Let's Encrypt + Nginx.</p>
-        </div>
-
-        <div class="card">
-            <h2>📦 Node.js API</h2>
-            <p>Backend Express ejecutándose en Docker.</p>
-        </div>
-
-    </div>
-
-    <div class="status">
-        ✅ Sistema Online
-    </div>
-</div>
-
+  <script>
+    // Cargar el menú desde el backend
+    async function loadMenu() {
+      try {
+        const res = await fetch('/api/items');
+        const items = await res.json();
+        const container = document.getElementById('menu');
+        items.forEach(it => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h3>${it.name}</h3>
+            <p class="desc">${it.description || ''}</p>
+            <div class="price">$${Number(it.price).toFixed(2)}</div>
+            <button class="btn">Añadir</button>
+          `;
+          container.appendChild(card);
+        });
+      } catch (e) {
+        console.error('Error cargando menú', e);
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadMenu);
+  </script>
 </body>
 </html>
